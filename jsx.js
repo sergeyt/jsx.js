@@ -17,7 +17,7 @@
 	// Object extensions
 
 	extend(Object, "isObject", function(x) {
-		return typeof x === "object" || typeof x === 'function';
+		return x !== null && (typeof x === "object" || typeof x === 'function');
 	});
 
 	extend(Object, "isFunction", function(x) {
