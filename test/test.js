@@ -64,6 +64,14 @@ describe("jsx.js tests", function() {
 		expect(Number.isNumber(3.14)).toBe(true);
 	});
 
+	it("Number.toNumber", function() {
+		expect(Number.toNumber(3.14)).toBe(3.14);
+		expect(Number.toNumber("3.14")).toBe(3.14);
+		expect(Number.toNumber(true)).toBe(1);
+		expect(Number.toNumber(false)).toBe(0);
+		expect(Number.toNumber(null)).toBe(0);
+	});
+
 	// String extensions
 
 	it("String.isString", function() {
@@ -72,6 +80,34 @@ describe("jsx.js tests", function() {
 			expect(String.isString(v)).toBe(false);
 		});
 		expect(String.isString("test")).toBe(true);
+	});
+
+	it("String.trim", function() {
+		expect(" test ".trim()).toBe("test");
+		expect("\ttest\t".trim()).toBe("test");
+		expect("\ntest\n".trim()).toBe("test");
+		expect("\rtest\r".trim()).toBe("test");
+		expect("\ftest\f".trim()).toBe("test");
+		expect("".trim()).toBe("");
+	});
+
+	it("String.format", function() {
+		expect("{0}{1}".format(1, 2)).toBe("12");
+		// TODO check brace escaping
+	});
+
+	it("String.startsWith", function() {
+		expect("ab".startsWith("a")).toBe(true);
+		expect("a".startsWith("a")).toBe(true);
+		expect("a".startsWith("")).toBe(true);
+		expect("_a".startsWith("a")).toBe(false);
+	});
+
+	it("String.endsWith", function() {
+		expect("ab".endsWith("b")).toBe(true);
+		expect("a".endsWith("a")).toBe(true);
+		expect("a".endsWith("")).toBe(true);
+		expect("a_".endsWith("a")).toBe(false);
 	});
 
 	// Function extensions
