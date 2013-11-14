@@ -458,7 +458,7 @@
 		extend(ArrayBuffer.prototype, "writeUTF8", function(s, start) {
 			if (arguments.length < 2) start = 0;
 			var bytes = new Uint8Array(this);
-			bytes.writeUTF8(s, start);
+			return bytes.writeUTF8(s, start);
 		});
 
 		// Decodes UTF8 string
