@@ -79,7 +79,7 @@
 		return this | 0;
 	});
 
-	extend(Number.prototype, "toUint", function() {
+	extend(Number.prototype, "toUInt", function() {
 		var x = this;
 		x = x | 0;
 		return x < 0 ? (x + 4294967296) : x;
@@ -208,6 +208,28 @@
 		}
 		return true;
 	});
+
+	extend(Array.prototype, "take", function(count) {
+		var result = [];
+		for (var i = 0; i < this.length && i < count; i++) {
+			result.push(this[i]);
+		}
+		return result;
+	});
+
+	extend(Array.prototype, "skip", function(count) {
+		if (this.length === 0) return [];
+		var result = [];
+		var i = 0;
+		while (i < count && i < this.length)
+			i++;
+		while (i < this.length) {
+			result.push(this[i++]);
+		}
+		return result;
+	});
+	
+	// aggregates
 
 	extend(Array.prototype, "count", function(x) {
 		if (this.length === 0) return 0;
@@ -417,10 +439,6 @@
 			var bytes = new Uint8Array(this, start, end - start);
 			return bytes.toString();
 		};
-
-		extend(ArrayBuffer.prototype, "toBase64", function() {
-			return new Uint8Array(this).toBase64();
-		});
 	}
 
 })();

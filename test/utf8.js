@@ -115,7 +115,7 @@ describe("utf8", function() {
 		expect(result).toEqual(longAscii);
 	});
 
-	it("perf", function() {
+	xit("perf", function() {
 		console.log("encoding and decoding a long ascii string 100 times");
 		var start = new Date();
 		for (i = 0; i < 100; i++) {

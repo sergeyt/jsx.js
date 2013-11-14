@@ -73,6 +73,17 @@ describe("jsx.js tests", function() {
 		expect(Number.toNumber(null)).toBe(0);
 	});
 
+	it("Number.toInt", function() {
+		expect((3.14).toInt()).toBe(3);
+		expect((3).toInt()).toBe(3);
+	});
+	
+	it("Number.toUInt", function() {
+		expect((3.14).toUInt()).toBe(3);
+		expect((3).toUInt()).toBe(3);
+		expect((-1).toUInt()).toBe(4294967295);
+	});
+
 	// String extensions
 
 	it("String.isString", function() {
@@ -214,5 +225,19 @@ describe("jsx.js tests", function() {
 	it("Array.avg", function() {
 		expect([].avg()).toBe(0);
 		expect([1, 2, 3].avg()).toBe(2);
+	});
+
+	it("Array.take", function() {
+		expect([].take()).toEqual([]);
+		expect([].take(-1)).toEqual([]);
+		expect([1, 2, 3].take(1)).toEqual([1]);
+		expect([1, 2, 3].take(0)).toEqual([]);
+	});
+
+	it("Array.skip", function() {
+		expect([].skip()).toEqual([]);
+		expect([].skip(-1)).toEqual([]);
+		expect([1, 2, 3].skip(1)).toEqual([2, 3]);
+		expect([1, 2, 3].skip(0)).toEqual([1, 2, 3]);
 	});
 });
