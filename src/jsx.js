@@ -53,7 +53,7 @@
 	extend(String.prototype, "format", function() {
 		var args = arguments;
 		return this.replace(/{(\d+)}/g, function(match, number) {
-			return typeof args[number] != 'undefined' ? args[number] : match;
+			return typeof args[number] != 'undefined' ? args[number] : "";
 		});
 	});
 
@@ -210,6 +210,7 @@
 	});
 
 	extend(Array.prototype, "count", function(x) {
+		if (this.length === 0) return 0;
 		var count = 0, i;
 		if (typeof x === "function") {
 			var fnThis = arguments.length > 1 ? arguments[1] : null;

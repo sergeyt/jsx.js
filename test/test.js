@@ -94,6 +94,7 @@ describe("jsx.js tests", function() {
 
 	it("String.format", function() {
 		expect("{0}{1}".format(1, 2)).toBe("12");
+		expect("{0}{1}{2}".format(1, 2)).toBe("12");
 		// TODO check brace escaping
 	});
 
@@ -176,6 +177,7 @@ describe("jsx.js tests", function() {
 	it("Array.find", function() {
 		expect([1, 2, 3].find(function(x) { return x === 2; })).toBe(2);
 		expect([1, 2, 3].find(function(x) { return x === 0; })).toBeUndefined();
+		expect([1, 2, 3].find(function(x) { return x === 0; }, null)).toBeUndefined();
 	});
 	
 	it("Array.any", function() {
@@ -183,6 +185,7 @@ describe("jsx.js tests", function() {
 		expect([1, 2, 3].any()).toBeTruthy();
 		expect([1, 2, 3].any(function(x) { return x === 2; })).toBeTruthy();
 		expect([1, 2, 3].any(function(x) { return x === 0; })).toBeFalsy();
+		expect([1, 2, 3].any(function(x) { return x === 0; }, null)).toBeFalsy();
 	});
 	
 	it("Array.all", function() {
@@ -190,5 +193,26 @@ describe("jsx.js tests", function() {
 		expect([].all(identity)).toBeTruthy();
 		expect([1, 2, 3].all(function (x) { return x > 0; })).toBeTruthy();
 		expect([-1, 2, 3].all(function (x) { return x > 0; })).toBeFalsy();
+		expect([-1, 2, 3].all(function (x) { return x > 0; }, null)).toBeFalsy();
+	});
+
+	it("Array.count", function() {
+		expect([].count()).toBe(0);
+		expect([].count(1)).toBe(0);
+		expect([1, 1, 2].count(1)).toBe(2);
+		expect([-1, 1, 2].count(function(x) { return x > 0; })).toBe(2);
+		expect([-1, 1, 2].count(function(x) { return x > 0; }, null)).toBe(2);
+	});
+
+	it("Array.sum", function() {
+		expect([].sum()).toBe(0);
+		expect([1, 2, 3].sum()).toBe(6);
+		expect([1, 2, 3].sum(function(x) { return x * x; })).toBe(14);
+		expect([1, 2, 3].sum(function(x) { return x * x; }, null)).toBe(14);
+	});
+	
+	it("Array.avg", function() {
+		expect([].avg()).toBe(0);
+		expect([1, 2, 3].avg()).toBe(2);
 	});
 });
