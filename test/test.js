@@ -2,6 +2,7 @@ describe("jsx.js tests", function() {
 	
 	// Object extensions
 
+	function identity(v) { return v; }
 	function foo() { return "foo"; }
 	
 	it("Object.isObject", function() {
@@ -118,5 +119,76 @@ describe("jsx.js tests", function() {
 			expect(Function.isFunction(v)).toBe(false);
 		});
 		expect(Function.isFunction(foo)).toBe(true);
+	});
+	
+	// Array extensions
+	
+	it("Array.clone", function() {
+		var arr = [];
+		expect(arr.clone()).not.toBe(arr);
+		arr = [1, 2, 3];
+		expect(arr.clone()).toEqual(arr);
+	});
+	
+	it("Array.clear", function() {
+		expect([1,2,3].clear().length).toEqual(0);
+	});
+	
+	it("Array.first", function() {
+		expect([1, 2, 3].first()).toBe(1);
+		expect([1, 2, 3].first(function (x) { return x === 2; })).toBe(2);
+		expect([1, 2, 3].first(function(x) { return x === 0; })).toBeUndefined();
+		expect([].first()).toBeUndefined();
+	});
+	
+	it("Array.last", function() {
+		expect([1, 2, 3].last()).toBe(3);
+		expect([1, 2, 3].last(function(x) { return x === 1; })).toBe(1);
+		expect([1, 2, 3].last(function(x) { return x === 0; })).toBeUndefined();
+		expect([].last()).toBeUndefined();
+	});
+	
+	it("Array.peek", function() {
+		expect([1, 2, 3].peek()).toBe(3);
+		expect([].peek()).toBeUndefined();
+	});
+	
+	it("Array.top", function() {
+		expect([1, 2, 3].top()).toBe(3);
+		expect([].top()).toBeUndefined();
+	});
+	
+	it("Array.isEmpty", function() {
+		expect([1, 2, 3].isEmpty()).toBeFalsy();
+		expect([].isEmpty()).toBeTruthy();
+	});
+	
+	it("Array.isNotEmpty", function() {
+		expect([1, 2, 3].isNotEmpty()).toBeTruthy();
+		expect([].isNotEmpty()).toBeFalsy();
+	});
+	
+	it("Array.contains", function() {
+		expect([1, 2, 3].contains(2)).toBeTruthy();
+		expect([1, 2, 3].contains(0)).toBeFalsy();
+	});
+	
+	it("Array.find", function() {
+		expect([1, 2, 3].find(function(x) { return x === 2; })).toBe(2);
+		expect([1, 2, 3].find(function(x) { return x === 0; })).toBeUndefined();
+	});
+	
+	it("Array.any", function() {
+		expect([].any()).toBeFalsy();
+		expect([1, 2, 3].any()).toBeTruthy();
+		expect([1, 2, 3].any(function(x) { return x === 2; })).toBeTruthy();
+		expect([1, 2, 3].any(function(x) { return x === 0; })).toBeFalsy();
+	});
+	
+	it("Array.all", function() {
+		expect([].all()).toBeTruthy();
+		expect([].all(identity)).toBeTruthy();
+		expect([1, 2, 3].all(function (x) { return x > 0; })).toBeTruthy();
+		expect([-1, 2, 3].all(function (x) { return x > 0; })).toBeFalsy();
 	});
 });

@@ -127,15 +127,23 @@
 	});
 
 	extend(Array.prototype, "clear", function() {
-		// TODO check, complete
 		this.length = 0;
+		return this;
 	});
 
 	extend(Array.prototype, "first", function() {
+		if (arguments.length > 0 && typeof arguments[0] == "function") {
+			var i = this.findIndex.apply(this, Array.prototype.slice.call(arguments, 0));
+			return i >= 0 ? this[i] : undefined;
+		}
 		return this[0];
 	});
 
 	extend(Array.prototype, "last", function() {
+		if (arguments.length > 0 && typeof arguments[0] == "function") {
+			var i = this.findLastIndex.apply(this, Array.prototype.slice.call(arguments, 0));
+			return i >= 0 ? this[i] : undefined;
+		}
 		return this[this.length - 1];
 	});
 
@@ -151,46 +159,12 @@
 		return this.length > 0;
 	});
 
-	extend(Array.prototype, "replace", function(x, y) {
-		if (x === y) {
-			return 0;
-		}
-		var count = 0;
-		for (var i = 0; i < this.length; i++) {
-			if (this[i] === x) {
-				this[i] = y;
-				count++;
-			}
-		}
-		return count;
-	});
-
 	extend(Array.prototype, "contains", function(val) {
 		return this.indexOf(val) >= 0;
 	});
 
 	extend(Array.prototype, "top", function() {
-		return this.length && this[this.length - 1];
-	});
-
-	extend(Array.prototype, "map", function(fn) {
-		var fnThis = arguments.length > 1 ? arguments[1] : null;
-		var arr = [];
-		for (var i = 0; i < this.length; i++) {
-			arr.push(fn.call(fnThis, this[i], i, this));
-		}
-		return arr;
-	});
-
-	extend(Array.prototype, "filter", function(fn) {
-		var fnThis = arguments.length > 1 ? arguments[1] : null;
-		var arr = [];
-		for (var i = 0; i < this.length; i++) {
-			var val = this[i];
-			if (fn.call(fnThis, val, i, this))
-				arr.push(val);
-		}
-		return arr;
+		return this[this.length - 1];
 	});
 
 	extend(Array.prototype, "findIndex", function(fn) {
@@ -202,18 +176,30 @@
 		}
 		return -1;
 	});
+	
+	extend(Array.prototype, "findLastIndex", function(fn) {
+		var fnThis = arguments.length > 1 ? arguments[1] : null;
+		for (var i = this.length - 1; i >= 0; i--) {
+			var val = this[i];
+			if (fn.call(fnThis, val, i, this))
+				return i;
+		}
+		return -1;
+	});
 
 	extend(Array.prototype, "find", function(fn) {
 		var i = this.findIndex(fn, arguments.length > 1 ? arguments[1] : null);
-		return i === -1 ? null : this[i];
+		return i === -1 ? undefined : this[i];
 	});
 
 	extend(Array.prototype, "any", function(fn) {
-		if (arguments.length == 0) return this.length > 0;
+		if (this.length === 0) return false;
+		if (arguments.length === 0) return this.length > 0;
 		return this.findIndex(fn, arguments.length > 1 ? arguments[1] : null) !== -1;
 	});
 
 	extend(Array.prototype, "all", function(fn) {
+		if (this.length === 0) return true;
 		var fnThis = arguments.length > 1 ? arguments[1] : null;
 		for (var i = 0; i < this.length; i++) {
 			var val = this[i];
@@ -313,7 +299,7 @@
 					if (i == s.length - 1) fail("Unpaired surrogate");
 					var d = s.charCodeAt(++i);
 					if (c < 0xD800 || c > 0xDBFF || d < 0xDC00 || d > 0xDFFF) {
-						console.log(i - 2, c.toString(16), d.toString(16))
+						console.log(i - 2, c.toString(16), d.toString(16));
 						fail("Unpaired surrogate");
 					}
 
@@ -333,7 +319,7 @@
 
 			function fail() { throw new Error("Illegal UTF-8"); }
 
-			if (arguments.length == 0) start = 0;
+			if (arguments.length === 0) start = 0;
 			if (arguments.length < 2) end = this.length;
 
 			var bytes = this;
@@ -348,7 +334,7 @@
 
 			// See http://en.wikipedia.org/wiki/UTF-8
 			while (i < end) {
-				var b1 = bytes[i];
+				b1 = bytes[i];
 				if (b1 < 128) {
 					charcodes[c++] = b1;
 					i += 1;
@@ -399,7 +385,7 @@
 				return String.fromCharCode.apply(String, charcodes);
 			else {
 				var chunks = [];
-				var start = 0, end = 65536;
+				start = 0, end = 65536;
 				while (start < charcodes.length) {
 					var slice = charcodes.slice(start, end);
 					chunks.push(String.fromCharCode.apply(String, slice));
@@ -476,7 +462,7 @@
 
 		// Decodes UTF8 string
 		ArrayBuffer.prototype.toString = function(start, end) {
-			if (arguments.length == 0) start = 0;
+			if (arguments.length === 0) start = 0;
 			if (arguments.length < 2) end = this.byteLength;
 			var bytes = new Uint8Array(this, start, end - start);
 			return bytes.toString();
